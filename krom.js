@@ -13,13 +13,15 @@ Krom.setGamepadAxisCallback(gamepadAxisCallback);
 Krom.setGamepadButtonCallback(gamepadButtonCallback);
 Krom.setAudioCallback(audioCallback);
 
+var clearColor = 0xff000000;
+
 function renderCallback() {
 	Krom.begin(null, null);
 	
 	var flags = 0;
 	flags |= 1; // Color
 	flags |= 2; // Depth
-	Krom.clear(flags, 0xff000000, 1.0, null);
+	Krom.clear(flags, clearColor, 1.0, null);
 
 	Krom.end();
 }
@@ -50,18 +52,26 @@ var Module = {};
 Module['wasmBinary'] = wasmbin;
 Module['onRuntimeInitialized'] = function() {
 	Krom.log('onRuntimeInitialized');
+
+	// Set clear color to red on success
+	clearColor = 0xffff0000;
+
 	// timesTwo = Module.cwrap('timesTwo', 'number', ['number'])
 	// timesTwo(3);
 	// var result = Module.ccall('timesTwo', 'number', ['number'], [3]);
 	// Module._timesTwo(3);
 }
 
+// Manual wasm init
 // Module['instantiateWasm'] = function(importObject, successCallback) {
+
+	// Sync
 	// var myModule = new WebAssembly.Module(wasmbin);
 	// var myInstance = new WebAssembly.Instance(myModule, importObject);
 	// successCallback(myInstance);
 	// return myModule.exports;
 
+	// Async
 	// WebAssembly.instantiate(new Uint8Array(wasmbin), importObject).then(function(output) {
 		// successCallback(output.instance);
 	// });
