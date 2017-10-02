@@ -8,3 +8,17 @@ Compile wasm:
 source ./emsdk_env.sh
 emcc hello.c -s WASM=1 -o hello.js -O3
 ```
+
+Run Krom:
+
+```
+.\Krom_bin\win32\Krom.exe . .
+```
+
+```
+./Krom_bin/macos/Krom.app/Contents/MacOS/Krom . .
+```
+
+```
+./Krom_bin/linux/Krom . .
+```
