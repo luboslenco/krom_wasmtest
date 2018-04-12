@@ -1,5 +1,5 @@
 
-Krom.init("KromApp", 640, 480, 0, false, 0);
+Krom.init("Krom", 640, 480, 0, false, 0);
 Krom.setCallback(renderCallback);
 Krom.setDropFilesCallback(dropFilesCallback);
 Krom.setKeyboardDownCallback(keyboardDownCallback);
@@ -12,6 +12,18 @@ Krom.setMouseWheelCallback(mouseWheelCallback);
 Krom.setGamepadAxisCallback(gamepadAxisCallback);
 Krom.setGamepadButtonCallback(gamepadButtonCallback);
 Krom.setAudioCallback(audioCallback);
+
+function dropFilesCallback(path) {}
+function keyboardDownCallback(key) {}
+function keyboardUpCallback(key) {}
+function keyboardPressCallback(char) {}
+function mouseDownCallback(button, x, y) {}
+function mouseUpCallback(button, x, y) {}
+function mouseMoveCallback(x, y, mx, my) {}
+function mouseWheelCallback(delta) {}
+function gamepadAxisCallback(gamepad, axis, value) {}
+function gamepadButtonCallback(gamepad, button, value) {}
+function audioCallback(samples) {}
 
 var clearColor = 0xff000000;
 
@@ -26,56 +38,11 @@ function renderCallback() {
 	Krom.end();
 }
 
-function dropFilesCallback(path) {}
-function keyboardDownCallback(key) {}
-function keyboardUpCallback(key) {}
-function keyboardPressCallback(char) {}
-function mouseDownCallback(button, x, y) {}
-function mouseUpCallback(button, x, y) {}
-function mouseMoveCallback(x, y, mx, my) {}
-function mouseWheelCallback(delta) {}
-function gamepadAxisCallback(gamepad, axis, value) {}
-function gamepadButtonCallback(gamepad, button, value) {}
-function audioCallback(samples)  {}
-
 // Run wasm
-function read(path, type) {
-	Krom.log('Read ' + path);
-	var buffer = Krom.loadBlob(path);
-	return type == 'binary' ? buffer : String.fromCharCode.apply(String, new Uint8Array(buffer));
-}
-var print = Krom.log;
-var jsstr = read('hello.js');
-var wasmbin = read('hello.wasm', 'binary');
+var wasmbin = Krom.loadBlob("hello.wasm");
 
-var Module = {};
-Module['wasmBinary'] = wasmbin;
-Module['onRuntimeInitialized'] = function() {
-	Krom.log('onRuntimeInitialized');
-
-	// Set clear color to red on success
-	clearColor = 0xffff0000;
-
-	// timesTwo = Module.cwrap('timesTwo', 'number', ['number'])
-	// timesTwo(3);
-	// var result = Module.ccall('timesTwo', 'number', ['number'], [3]);
-	// Module._timesTwo(3);
-}
-
-// Manual wasm init
-// Module['instantiateWasm'] = function(importObject, successCallback) {
-
-	// Sync
-	// var myModule = new WebAssembly.Module(wasmbin);
-	// var myInstance = new WebAssembly.Instance(myModule, importObject);
-	// successCallback(myInstance);
-	// return myModule.exports;
-
-	// Async
-	// WebAssembly.instantiate(new Uint8Array(wasmbin), importObject).then(function(output) {
-		// successCallback(output.instance);
-	// });
-	// return {};
-// }
-
-eval.call(null, jsstr);
+WebAssembly.instantiate(wasmbin).then(results => {
+	instance = results.instance;
+	var res = instance.exports.timesTwo(4);
+	if (res == 8) clearColor = 0xffff0000;
+});

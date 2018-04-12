@@ -1,6 +1,6 @@
-#include <emscripten.h>
+#define WASM_EXPORT __attribute__((visibility("default")))
 
-EMSCRIPTEN_KEEPALIVE
+WASM_EXPORT
 int timesTwo(int x) {
 	return x * 2;
 }
