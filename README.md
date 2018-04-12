@@ -6,13 +6,15 @@ Compile wasm:
 ```
 ./emsdk activate --global --build=Release sdk-incoming-64bit binaryen-master-64bit
 source ./emsdk_env.sh
-emcc hello.c -s WASM=1 -o hello.js -O3
+emcc main.c -s WASM=1 -o main.js -O3
 ```
+
+or https://webassembly.studio/.
 
 Run Krom:
 
 ```
-.\Krom_bin\win32\Krom.exe . .
+.\Krom_bin\win32\Krom.exe . . --stdout out.txt
 ```
 
 ```
