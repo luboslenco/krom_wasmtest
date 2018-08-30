@@ -42,21 +42,15 @@ function audioCallback(samples) {}
 // Run wasm
 var wasmbin = Krom.loadBlob("main.wasm");
 module = new WebAssembly.Module(wasmbin);
-// memory = new WebAssembly.Memory({initial: 10, maximum: 10}); // 640KB
-instance = WebAssembly.Instance(module);
-ar = new Float32Array(instance.exports.memory.buffer, instance.exports.getMemory(), 16 * 3);
+// memory = new WebAssembly.Memory({initial: 10, maximum: 10});
+exports = new WebAssembly.Instance(module).exports;
+ar = new Float32Array(exports.memory.buffer, exports.getMemory(), 16 * 3);
 
 for (var i = 16; i < 48; i++) {
 	ar[i] = 1.0;
 }
 
-instance.exports.mat4_multmat();
-
-Krom.log(ar[0]);
+exports.mat4_multmat();
+Krom.log(ar[0].toString());
 
 clearColor = 0xffff0000;
-
-// Async
-// WebAssembly.instantiate(wasmbin).then(results => {
-	// instance = results.instance;
-// });
