@@ -1,33 +1,12 @@
-
-var clearColor = 0xff000000;
-
-function renderCallback() {
-	Krom.begin(null, null);
-	
-	var flags = 0;
-	flags |= 1; // Color
-	flags |= 2; // Depth
-	Krom.clear(flags, clearColor, 1.0, null);
-
-	Krom.end();
-}
-
-// title: String, width: Int, height: Int, samplesPerPixel: Int, vSync: Bool, windowMode: Int, resizable: Bool, maximizable: Bool, minimizable: Bool
-Krom.init("Krom", 640, 480, 0, true, 0, false, false, true);
-Krom.setCallback(renderCallback);
-Krom.setDropFilesCallback(dropFilesCallback);
-Krom.setKeyboardDownCallback(keyboardDownCallback);
-Krom.setKeyboardUpCallback(keyboardUpCallback);
-Krom.setKeyboardPressCallback(keyboardPressCallback);
-Krom.setMouseDownCallback(mouseDownCallback);
-Krom.setMouseUpCallback(mouseUpCallback);
-Krom.setMouseMoveCallback(mouseMoveCallback);
-Krom.setMouseWheelCallback(mouseWheelCallback);
-Krom.setGamepadAxisCallback(gamepadAxisCallback);
-Krom.setGamepadButtonCallback(gamepadButtonCallback);
-Krom.setAudioCallback(audioCallback);
-
 function dropFilesCallback(path) {}
+function cutCallback() { return ""; }
+function copyCallback() { return ""; }
+function pasteCallback(string) {}
+function foregroundCallback() {}
+function resumeCallback() {}
+function pauseCallback() {}
+function backgroundCallback() {}
+function shutdownCallback() {}
 function keyboardDownCallback(key) {}
 function keyboardUpCallback(key) {}
 function keyboardPressCallback(char) {}
@@ -37,7 +16,46 @@ function mouseMoveCallback(x, y, mx, my) {}
 function mouseWheelCallback(delta) {}
 function gamepadAxisCallback(gamepad, axis, value) {}
 function gamepadButtonCallback(gamepad, button, value) {}
+function penDownCallback(x, y, pressure) {}
+function penUpCallback(x, y, pressure) {}
+function penMoveCallback(x, y, pressure) {}
 function audioCallback(samples) {}
+
+let api = 3;
+const resizable = 1;
+const minimizable = 2;
+const maximizable = 4;
+Krom.init("KromApp", 640, 480, 1, true, 0, resizable | minimizable | maximizable, api);
+Krom.setCallback(renderCallback);
+Krom.setDropFilesCallback(dropFilesCallback);
+Krom.setCutCopyPasteCallback(cutCallback, copyCallback, pasteCallback);
+Krom.setApplicationStateCallback(foregroundCallback, resumeCallback, pauseCallback, backgroundCallback, shutdownCallback);
+Krom.setKeyboardDownCallback(keyboardDownCallback);
+Krom.setKeyboardUpCallback(keyboardUpCallback);
+Krom.setKeyboardPressCallback(keyboardPressCallback);
+Krom.setMouseDownCallback(mouseDownCallback);
+Krom.setMouseUpCallback(mouseUpCallback);
+Krom.setMouseMoveCallback(mouseMoveCallback);
+Krom.setMouseWheelCallback(mouseWheelCallback);
+Krom.setGamepadAxisCallback(gamepadAxisCallback);
+Krom.setGamepadButtonCallback(gamepadButtonCallback);
+Krom.setPenDownCallback(penDownCallback);
+Krom.setPenUpCallback(penUpCallback);
+Krom.setPenMoveCallback(penMoveCallback);
+Krom.setAudioCallback(audioCallback);
+
+var clearColor = 0xff000000;
+
+function renderCallback() {
+	Krom.begin(null, null);
+	
+	let flags = 0;
+	flags |= 1; // Color
+	flags |= 2; // Depth
+	Krom.clear(flags, clearColor, 1.0, null);
+
+	Krom.end();
+}
 
 // Run wasm
 var wasmbin = Krom.loadBlob("main.wasm");
